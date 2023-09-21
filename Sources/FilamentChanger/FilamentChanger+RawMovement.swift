@@ -9,8 +9,8 @@ extension FilamentChanger {
     func unloadFilamentFromHotentRaw() {
         let toolhead = context.toolhead
 
-        toolhead.extrude(distance: softenTheTipDistance, speed: extrudeTestSpeed)
-        toolhead.extrude(distance: -(settings.distances[.hotend] - settings.distances[.coolingTube]), speed: extruderYankSpeed)
+        toolhead.extrude(distance: softenTheTipDistance, speed: settings.speeds.preciseFilamentMove)
+        toolhead.extrude(distance: -(settings.distances[.hotend] - settings.distances[.coolingTube]), speed: settings.speeds.extruderYank)
         toolhead.waitForMovesToFinish()
         toolhead.dwell(for: .seconds(5))
     }
@@ -23,7 +23,7 @@ extension FilamentChanger {
         let toolhead = context.toolhead
 
         for _ in 0..<8 {
-            toolhead.extrude(distance: -babyStep, speed: extrudeTestSpeed)
+            toolhead.extrude(distance: -babyStep, speed: settings.speeds.preciseFilamentMove)
             toolhead.waitForMovesToFinish()
 
             if sensorAfterExtruder.isFilamentPresent == false {
@@ -42,7 +42,7 @@ extension FilamentChanger {
 
         for _ in 0..<8 {
             encoder.resetPulseCount()
-            toolhead.extrude(distance: -20.0, speed: extrudeTestSpeed)
+            toolhead.extrude(distance: -20.0, speed: settings.speeds.preciseFilamentMove)
             toolhead.waitForMovesToFinish()
 
             if encoder.distance == 0.0 {
@@ -67,7 +67,7 @@ extension FilamentChanger {
         let toolhead = context.toolhead
 
         for _ in 0..<8 {
-            toolhead.extrude(distance: -babyStep, speed: extrudeTestSpeed)
+            toolhead.extrude(distance: -babyStep, speed: settings.speeds.preciseFilamentMove)
             toolhead.waitForMovesToFinish()
 
             if sensorBeforeExtruder.isFilamentPresent == false {
@@ -80,12 +80,26 @@ extension FilamentChanger {
         }
     }
     
-    func unloadFilamentFromPTFETubeRaw() throws {
+    @discardableResult
+    func unloadFilamentFromPTFETubeRaw(longEnoughForRoughSpeed: Bool) throws -> Float {
         let toolhead = context.toolhead
         let encoder = context.encoder
         let feeder = context.feeder
 
-        let numberOfIterations = Int(settings.distances[.inTube] / babyStep) + 15
+        let numberOfIterations: Int
+
+        if longEnoughForRoughSpeed {
+            let distance = distance(from: .inTube, to: .encoder, adjustment: roughTubeMoveBreathingRoom)
+
+            let distanceMoved = try rawMove(for: distance, motor: .feeder, speed: settings.speeds.roughFilamentMove, acceleration: feederAcceleration)
+            let absoluteDelta = abs(distance - distanceMoved)
+
+            numberOfIterations = Int((roughTubeMoveBreathingRoom + absoluteDelta) / babyStep) + 15
+        } else {
+            let distance = distance(from: .inTube, to: .encoder)
+            numberOfIterations = Int(distance / babyStep) + 15
+        }
+
         for _ in 0..<numberOfIterations {
             encoder.resetPulseCount()
             feeder.move(to: -babyStep, speed: 60.0, acceleration: feederAcceleration)
@@ -97,12 +111,16 @@ extension FilamentChanger {
         }
 
         encoder.resetPulseCount()
-        feeder.move(to: 30.0, speed: 20.0, acceleration: feederAcceleration)
+        feeder.move(to: 30.0, speed: settings.speeds.preciseFilamentMove, acceleration: feederAcceleration)
         toolhead.waitForMovesToFinish()
+
+        let distanceMoved = encoder.distance
         
-        if encoder.distance == 0.0 {
+        if distanceMoved == 0.0 {
             throw UnloadingError.failedToLoadFilamentBackToPosition(.encoder)
         }
+
+        return distanceMoved
     }
 
     func unloadFromEncoderRaw() throws {
@@ -120,11 +138,13 @@ extension FilamentChanger {
             }
         }
 
-        feeder.move(to: -(distanceFromEncoderToPark - encoder.distance), speed: 20.0, acceleration: feederAcceleration)
+        let parkingDistance = distance(from: .encoder, to: .parking)
+        feeder.move(to: parkingDistance, speed: 20.0, acceleration: feederAcceleration)
         toolhead.waitForMovesToFinish()
     }
 
-    func rawMove(for distance: Float, motor: Motor, speed: Float, acceleration: Float) throws {
+    @discardableResult
+    func rawMove(for distance: Float, motor: Motor, speed: Float, acceleration: Float) throws -> Float {
         let feeder = context.feeder
         let toolhead = context.toolhead
         let encoder = context.encoder
@@ -154,8 +174,12 @@ extension FilamentChanger {
                 break
         }
 
-        if encoder.distance == 0.0 {
+        let distanceMoved = encoder.distance
+
+        if distanceMoved == 0.0 {
             throw GeneralError.noRawMovement
         }
+
+        return distanceMoved
     }
 }

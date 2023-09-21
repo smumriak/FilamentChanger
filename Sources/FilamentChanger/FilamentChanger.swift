@@ -72,15 +72,15 @@ final class FilamentChanger {
     }
 
     func distance(to position: Position, adjustment: Float? = nil) -> Float {
-        if position == .unknown { return 0.0 }
+        distance(from: currentState.filamentPosition, to: position, adjustment: adjustment ?? currentState.positionAdjustment)
+    }
 
-        switch currentState.filamentPosition {
-            case .unknown:
-                return 0.0
-
-            case let value:
-                return settings.distances[value] - settings.distances[value] - (adjustment ?? currentState.positionAdjustment)
+    func distance(from: Position, to: Position, adjustment: Float = 0.0) -> Float {
+        if to == .unknown || from == .unknown {
+            return 0.0
         }
+
+        return settings.distances[to] - settings.distances[from] - adjustment
     }
 
     // MARK: Events handling
@@ -173,12 +173,12 @@ final class FilamentChanger {
             encoder.resetPulseCount()
         }
 
-        toolhead.extrude(distance: -(extruderTestDistance + ptfeTubePlay), speed: extrudeTestSpeed)
+        toolhead.extrude(distance: -(extruderTestDistance + ptfeTubePlay), speed: settings.speeds.filamentInExtruderTest)
 
         let distanceExtruded = encoder.distance
 
         if distanceExtruded != 0.0 {
-            toolhead.extrude(distance: min(extruderTestDistance + ptfeTubePlay, abs(distanceExtruded)), speed: extrudeTestSpeed)
+            toolhead.extrude(distance: min(extruderTestDistance + ptfeTubePlay, abs(distanceExtruded)), speed: settings.speeds.filamentInExtruderTest)
             return true
         } else {
             return false
@@ -188,7 +188,6 @@ final class FilamentChanger {
     var isFilamentInEncoder: Bool {
         let feeder = context.feeder
         let encoder = context.encoder
-        let servo = context.servo
 
         changeServoPosition(to: .down)
         defer {
@@ -200,11 +199,11 @@ final class FilamentChanger {
             encoder.resetPulseCount()
         }
 
-        feeder.move(to: 3.0, speed: extrudeTestSpeed, acceleration: feederAcceleration)
+        feeder.move(to: 3.0, speed: settings.speeds.preciseFilamentMove, acceleration: feederAcceleration)
 
         let distanceMoved = encoder.distance
         if distanceMoved != 0.0 {
-            feeder.move(to: -distanceMoved, speed: extrudeTestSpeed, acceleration: feederAcceleration)
+            feeder.move(to: -distanceMoved, speed: settings.speeds.preciseFilamentMove, acceleration: feederAcceleration)
             return true
         } else {
             return false

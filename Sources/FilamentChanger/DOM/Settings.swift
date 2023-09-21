@@ -11,10 +11,13 @@ struct Settings: Codable {
 
     var servoAngles: ServoAngles
 
+    var speeds: Speeds
+
     init() {
         distances = Distances(parking: 0.0, encoder: 0.0, extruder: 0.0, coolingTube: 0.0, hotend: 0.0)
         loadingSequence = []
         servoAngles = ServoAngles(up: 0.0, down: 0.0)
+        speeds = Speeds(extruderYank: 0.0, filamentInExtruderTest: 0.0, preciseFilamentMove: 0.0, roughFilamentMove: 0.0)
     }
 }
 
@@ -110,5 +113,14 @@ extension Settings {
     struct ServoAngles: Codable, Hashable {
         var up: Float
         var down: Float
+    }
+}
+
+extension Settings {
+    struct Speeds: Codable, Hashable {
+        var extruderYank: Float
+        var filamentInExtruderTest: Float
+        var preciseFilamentMove: Float
+        var roughFilamentMove: Float
     }
 }

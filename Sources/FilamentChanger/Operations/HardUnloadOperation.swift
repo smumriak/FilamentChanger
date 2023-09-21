@@ -5,17 +5,6 @@
 //  Created by Serhii Mumriak on 19.09.2023
 //
 
-// magic numbers
-let extruderTestDistance: Float = 2.0
-let softenTheTipDistance: Float = 2.0
-let ptfeTubePlay: Float = 5.24
-let extrudeTestSpeed: Float = 20.0
-let extruderYankSpeed: Float = 200.0
-let babyStep: Float = 10.0
-// let tubeLength: Float = 799.6
-let distanceFromEncoderToPark: Float = 15.0
-let feederAcceleration: Float = 2000.0
-
 struct HardUnloadOperation: Operation {
     func perform(in context: Context, filamentChanger: FilamentChanger) throws {
         // try unloadFilamentFromExtruder(in: context, filamentChanger: filamentChanger)
@@ -31,6 +20,8 @@ extension FilamentChanger {
 
         try sensorBeforeExtruder.withPauseOnRunoutDisabled {
             try sensorAfterExtruder.withPauseOnRunoutDisabled {
+                var isDeepInTube = false
+
                 currentState.positionAdjustment = 0.0
 
                 // first part is going to happen purely on extruder
@@ -62,8 +53,10 @@ extension FilamentChanger {
                         // this is quite bad. if after three attempts the thing could not be unloaded it means there are some weird shenanigans going on because
                         throw error
                     }
+                    isDeepInTube = true
                 } else if let sensorBeforeExtruder, sensorBeforeExtruder.isFilamentPresent == true {
                     currentState.filamentPosition = .sensorBeforeExtruder
+                    isDeepInTube = true
                 } else if isFilamentInEncoder {
                     currentState.filamentPosition = .inTube
                 }
@@ -82,7 +75,7 @@ extension FilamentChanger {
                     } else {
                         // this error does not matter since we will try to pull it from the PTFE tube anyway
                         try? withRetry(count: 2) {
-                            try rawMove(for: 5.0, motor: [.feeder, .extruder], speed: extrudeTestSpeed, acceleration: feederAcceleration)
+                            try rawMove(for: 5.0, motor: [.feeder, .extruder], speed: settings.speeds.preciseFilamentMove, acceleration: feederAcceleration)
                         }
                     }
 
@@ -91,8 +84,8 @@ extension FilamentChanger {
 
                 // third part is when we actually unload the PTFE tube and encoder
                 // we want to check if filament is still in encoder tho
-                if isFilamentInEncoder {
-                    try unloadFilamentFromPTFETubeRaw()
+                if currentState.filamentPosition == .inTube {
+                    try unloadFilamentFromPTFETubeRaw(longEnoughForRoughSpeed: isDeepInTube)
                     try unloadFromEncoderRaw()
                 }
 
@@ -145,13 +138,13 @@ extension FilamentChanger {
         }
     }
 
-    func unloadFilamentFromPTFETube() throws {
+    func unloadFilamentFromPTFETube(longEnoughForRoughSpeed: Bool) throws {
         if isFilamentInEncoder == false {
             return
         }
         do {
             try withServoDown {
-                try unloadFilamentFromPTFETubeRaw()
+                try unloadFilamentFromPTFETubeRaw(longEnoughForRoughSpeed: longEnoughForRoughSpeed)
             }
 
             currentState.filamentPosition = .encoder
@@ -194,13 +187,13 @@ extension FilamentChanger {
         for _ in 0..<15 {
             changeServoPosition(to: .up)
             feeder.position = 0.0
-            feeder.homingMove(to: 10.0, speed: 60.0, acceleration: 2000.0)
+            feeder.homingMove(to: 10.0, speed: 60.0, acceleration: feederAcceleration)
             toolhead.dwell(for: .milliseconds(200))
 
             var distanceMoved = abs(selector.position)
 
             feeder.position = 0.0
-            feeder.homingMove(to: -10.0, speed: 60.0, acceleration: 2000.0)
+            feeder.homingMove(to: -10.0, speed: 60.0, acceleration: feederAcceleration)
             toolhead.dwell(for: .milliseconds(200))
 
             distanceMoved += abs(selector.position)

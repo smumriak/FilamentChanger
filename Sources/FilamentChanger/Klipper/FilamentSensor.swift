@@ -52,6 +52,7 @@ extension Klipper {
             }
         }
 
+        @discardableResult
         func withPauseOnRunoutDisabled<R>(_ body: () throws -> (R)) rethrows -> R {
             let originalValue = shouldPauseOnRunout
             defer {
@@ -60,6 +61,7 @@ extension Klipper {
             return try body()
         }
 
+        @discardableResult
         func withSensorDisabled<R>(_ body: () throws -> (R)) rethrows -> R {
             let originalValue = isEnabled
             defer {
@@ -110,10 +112,22 @@ extension Klipper {
 }
 
 extension Optional where Wrapped == Klipper.FilamentSensor {
+    @discardableResult
     func withPauseOnRunoutDisabled<R>(_ body: () throws -> (R)) rethrows -> R {
         switch self {
             case .some(let value):
                 return try value.withPauseOnRunoutDisabled(body)
+
+            case .none:
+                return try body()
+        }
+    }
+
+    @discardableResult
+    func withSensorDisabled<R>(_ body: () throws -> (R)) rethrows -> R {
+        switch self {
+            case .some(let value):
+                return try value.withSensorDisabled(body)
 
             case .none:
                 return try body()

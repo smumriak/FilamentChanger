@@ -37,6 +37,7 @@ extension FilamentChanger {
         }
     }
 
+    @discardableResult
     func withServoDown<R>(_ body: () throws -> (R)) rethrows -> R {
         changeServoPosition(to: .down)
         defer {
