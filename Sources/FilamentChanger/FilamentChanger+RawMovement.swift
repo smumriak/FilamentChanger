@@ -6,21 +6,37 @@
 //
 
 extension FilamentChanger {
-    func unloadFilamentFromHotentRaw() {
+    @discardableResult
+    func unloadFilamentFromHotentRaw() -> Float {
         let toolhead = context.toolhead
+        let encoder = context.encoder
+
+        encoder.resetPulseCount()
+        defer {
+            encoder.resetPulseCount()
+        }
 
         toolhead.extrude(distance: softenTheTipDistance, speed: settings.speeds.preciseFilamentMove)
         toolhead.extrude(distance: -(settings.distances[.hotend] - settings.distances[.coolingTube]), speed: settings.speeds.extruderYank)
         toolhead.waitForMovesToFinish()
         toolhead.dwell(for: .seconds(5))
+
+        return encoder.distance
     }
 
-    func unloadFilamentFromSensorAfterExtruderRaw() throws {
+    @discardableResult
+    func unloadFilamentFromSensorAfterExtruderRaw() throws -> Float {
         guard let sensorAfterExtruder = context.sensorAfterExtruder else {
-            return
+            return 0.0
         }
 
         let toolhead = context.toolhead
+        let encoder = context.encoder
+
+        encoder.resetPulseCount()
+        defer {
+            encoder.resetPulseCount()
+        }
 
         for _ in 0..<8 {
             toolhead.extrude(distance: -babyStep, speed: settings.speeds.preciseFilamentMove)
@@ -34,11 +50,18 @@ extension FilamentChanger {
         if sensorAfterExtruder.isFilamentPresent == true {
             throw UnloadingError.failedToUnloadFromPosition(.sensorAfterExtruder)
         }
+
+        return encoder.distance
     }
 
-    func unloadFilamentFromExtruderRaw() throws {
+    @discardableResult
+    func unloadFilamentFromExtruderRaw() throws -> Float {
         let toolhead = context.toolhead
         let encoder = context.encoder
+
+        defer {
+            encoder.resetPulseCount()
+        }
 
         for _ in 0..<8 {
             encoder.resetPulseCount()
@@ -54,17 +77,28 @@ extension FilamentChanger {
             throw UnloadingError.failedToUnloadFromPosition(.inExtruder)
         }
 
-        if encoder.distance != 0.0 {
+        let distanceMoved = encoder.distance
+
+        if distanceMoved != 0.0 {
             throw UnloadingError.failedToUnloadFromPosition(.inExtruder)
         }
+
+        return distanceMoved
     }
 
-    func unloadFilamentFromSensorBeforeExtruderRaw() throws {
+    @discardableResult
+    func unloadFilamentFromSensorBeforeExtruderRaw() throws -> Float {
         guard let sensorBeforeExtruder = context.sensorBeforeExtruder else {
-            return
+            return 0.0
         }
 
         let toolhead = context.toolhead
+        let encoder = context.encoder
+        
+        encoder.resetPulseCount()
+        defer {
+            encoder.resetPulseCount()
+        }
 
         for _ in 0..<8 {
             toolhead.extrude(distance: -babyStep, speed: settings.speeds.preciseFilamentMove)
@@ -78,6 +112,8 @@ extension FilamentChanger {
         if sensorBeforeExtruder.isFilamentPresent {
             throw UnloadingError.failedToUnloadFromPosition(.sensorBeforeExtruder)
         }
+
+        return encoder.distance
     }
     
     @discardableResult

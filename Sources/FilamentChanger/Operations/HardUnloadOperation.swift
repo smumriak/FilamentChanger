@@ -20,7 +20,7 @@ extension FilamentChanger {
 
         try sensorBeforeExtruder.withPauseOnRunoutDisabled {
             try sensorAfterExtruder.withPauseOnRunoutDisabled {
-                var isDeepInTube = false
+                let isDeepInTube: Bool
 
                 currentState.positionAdjustment = 0.0
 
@@ -59,6 +59,9 @@ extension FilamentChanger {
                     isDeepInTube = true
                 } else if isFilamentInEncoder {
                     currentState.filamentPosition = .inTube
+                    isDeepInTube = false
+                } else {
+                    isDeepInTube = false
                 }
 
                 // second part is happening using synchronized motion
