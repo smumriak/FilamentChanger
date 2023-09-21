@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "Run",
+            "type": "lldb",
+            "request": "launch",
+            "args": [
+                "./Sources/python/test.py",
+            ],
+            "preLaunchTask": "build",
+            "env": {
+                "DEBUG": "1"
+            },
+            "program": "/usr/bin/python3"
+        },
+        {
+            "name": "RunWithoutBuilding",
+            "type": "lldb",
+            "request": "launch",
+            "args": [
+                "./Sources/python/test.py",
+            ],
+            "env": {
+                "DEBUG": "1"
+            },
+            "program": "/usr/bin/python3"
+        },
+        {
+            "name": "Test",
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "preLaunchTask": "build_tests",
+            "terminal": "console",
+            "program": "${workspaceFolder}/.buildTests/debug/FilamentChangerPackageTests.xctest"
+        }
+    ]
+}

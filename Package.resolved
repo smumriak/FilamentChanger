@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "pythonkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/smumriak/PythonKit.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4fdcde50d47e408adeb3657b69049227de950b06"
+      }
+    }
+  ],
+  "version" : 2
+}
