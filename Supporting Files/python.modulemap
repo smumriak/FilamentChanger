@@ -1,0 +1,448 @@
+//
+//  python.modulemap
+//  FilamentChanger
+//  
+//  Created by Serhii Mumriak on 21.09.2023
+//
+
+framework module Python [extern_c] [system] {
+  umbrella header "/usr/include/python3.10/Python.h"
+
+  export *
+  module * { export * }
+
+  explicit module abstract {
+    header "/usr/include/python3.10/abstract.h"
+    export *
+  }
+    
+  explicit module bltinmodule {
+    header "/usr/include/python3.10/bltinmodule.h"
+    export *
+  }
+    
+  explicit module boolobject {
+    header "/usr/include/python3.10/boolobject.h"
+    export *
+  }
+    
+  explicit module bytearrayobject {
+    header "/usr/include/python3.10/bytearrayobject.h"
+    export *
+  }
+    
+  explicit module bytesobject {
+    header "/usr/include/python3.10/bytesobject.h"
+    export *
+  }
+    
+  explicit module cellobject {
+    header "/usr/include/python3.10/cellobject.h"
+    export *
+  }
+    
+  explicit module ceval {
+    header "/usr/include/python3.10/ceval.h"
+    export *
+  }
+    
+  explicit module classobject {
+    header "/usr/include/python3.10/classobject.h"
+    export *
+  }
+    
+  explicit module codecs {
+    header "/usr/include/python3.10/codecs.h"
+    export *
+  }
+    
+  explicit module code {
+    header "/usr/include/python3.10/code.h"
+    export *
+  }
+    
+  explicit module compile {
+    header "/usr/include/python3.10/compile.h"
+    export *
+  }
+    
+  explicit module complexobject {
+    header "/usr/include/python3.10/complexobject.h"
+    export *
+  }
+    
+  explicit module context {
+    header "/usr/include/python3.10/context.h"
+    export *
+  }
+      
+  explicit module datetime {
+    header "/usr/include/python3.10/datetime.h"
+    export *
+  }
+    
+  explicit module descrobject {
+    header "/usr/include/python3.10/descrobject.h"
+    export *
+  }
+    
+  explicit module dictobject {
+    header "/usr/include/python3.10/dictobject.h"
+    export *
+  }
+    
+  explicit module dynamic_annotations {
+    header "/usr/include/python3.10/dynamic_annotations.h"
+    export *
+  }
+    
+  explicit module enumobject {
+    header "/usr/include/python3.10/enumobject.h"
+    export *
+  }
+    
+  explicit module errcode {
+    header "/usr/include/python3.10/errcode.h"
+    export *
+  }
+    
+  explicit module eval {
+    header "/usr/include/python3.10/eval.h"
+    export *
+  }
+    
+  explicit module exports {
+    header "/usr/include/python3.10/exports.h"
+    export *
+  }
+    
+  explicit module fileobject {
+    header "/usr/include/python3.10/fileobject.h"
+    export *
+  }
+    
+  explicit module fileutils {
+    header "/usr/include/python3.10/fileutils.h"
+    export *
+  }
+    
+  explicit module floatobject {
+    header "/usr/include/python3.10/floatobject.h"
+    export *
+  }
+    
+  explicit module frameobject {
+    header "/usr/include/python3.10/frameobject.h"
+    export *
+  }
+    
+  explicit module funcobject {
+    header "/usr/include/python3.10/funcobject.h"
+    export *
+  }
+    
+  explicit module genericaliasobject {
+    header "/usr/include/python3.10/genericaliasobject.h"
+    export *
+  }
+    
+  explicit module genobject {
+    header "/usr/include/python3.10/genobject.h"
+    export *
+  }
+    
+  explicit module graminit {
+    header "/usr/include/python3.10/graminit.h"
+    export *
+  }
+    
+  explicit module Imaging {
+    header "/usr/include/python3.10/Imaging.h"
+    export *
+  }
+    
+  explicit module ImDib {
+    header "/usr/include/python3.10/ImDib.h"
+    export *
+  }
+    
+  explicit module ImPlatform {
+    header "/usr/include/python3.10/ImPlatform.h"
+    export *
+  }
+    
+  explicit module import {
+    header "/usr/include/python3.10/import.h"
+    export *
+  }
+    
+  explicit module interpreteridobject {
+    header "/usr/include/python3.10/interpreteridobject.h"
+    export *
+  }
+    
+  explicit module intrcheck {
+    header "/usr/include/python3.10/intrcheck.h"
+    export *
+  }
+    
+  explicit module iterobject {
+    header "/usr/include/python3.10/iterobject.h"
+    export *
+  }
+    
+  explicit module listobject {
+    header "/usr/include/python3.10/listobject.h"
+    export *
+  }
+    
+  explicit module longintrepr {
+    header "/usr/include/python3.10/longintrepr.h"
+    export *
+  }
+    
+  explicit module longobject {
+    header "/usr/include/python3.10/longobject.h"
+    export *
+  }
+    
+  explicit module marshal {
+    header "/usr/include/python3.10/marshal.h"
+    export *
+  }
+    
+  explicit module memoryobject {
+    header "/usr/include/python3.10/memoryobject.h"
+    export *
+  }
+    
+  explicit module methodobject {
+    header "/usr/include/python3.10/methodobject.h"
+    export *
+  }
+    
+  explicit module modsupport {
+    header "/usr/include/python3.10/modsupport.h"
+    export *
+  }
+    
+  explicit module moduleobject {
+    header "/usr/include/python3.10/moduleobject.h"
+    export *
+  }
+    
+  explicit module namespaceobject {
+    header "/usr/include/python3.10/namespaceobject.h"
+    export *
+  }
+    
+  explicit module object {
+    header "/usr/include/python3.10/object.h"
+    export *
+  }
+    
+  explicit module objimpl {
+    header "/usr/include/python3.10/objimpl.h"
+    export *
+  }
+    
+  explicit module opcode {
+    header "/usr/include/python3.10/opcode.h"
+    export *
+  }
+    
+  explicit module osdefs {
+    header "/usr/include/python3.10/osdefs.h"
+    export *
+  }
+    
+  explicit module osmodule {
+    header "/usr/include/python3.10/osmodule.h"
+    export *
+  }
+    
+  explicit module patchlevel {
+    header "/usr/include/python3.10/patchlevel.h"
+    export *
+  }
+    
+  explicit module pycapsule {
+    header "/usr/include/python3.10/pycapsule.h"
+    export *
+  }
+    
+  explicit module pyconfig {
+    header "/usr/include/python3.10/pyconfig.h"
+    export *
+  }
+    
+  explicit module py_curses {
+    header "/usr/include/python3.10/py_curses.h"
+    export *
+  }
+      
+  explicit module pyerrors {
+    header "/usr/include/python3.10/pyerrors.h"
+    export *
+  }
+    
+  explicit module pyframe {
+    header "/usr/include/python3.10/pyframe.h"
+    export *
+  }
+    
+  explicit module pyhash {
+    header "/usr/include/python3.10/pyhash.h"
+    export *
+  }
+    
+  explicit module pylifecycle {
+    header "/usr/include/python3.10/pylifecycle.h"
+    export *
+  }
+    
+  explicit module pymacconfig {
+    header "/usr/include/python3.10/pymacconfig.h"
+    export *
+  }
+    
+  explicit module pymacro {
+    header "/usr/include/python3.10/pymacro.h"
+    export *
+  }
+    
+  explicit module pymath {
+    header "/usr/include/python3.10/pymath.h"
+    export *
+  }
+    
+  explicit module pymem {
+    header "/usr/include/python3.10/pymem.h"
+    export *
+  }
+    
+  explicit module pyport {
+    header "/usr/include/python3.10/pyport.h"
+    export *
+  }
+    
+  explicit module pystate {
+    header "/usr/include/python3.10/pystate.h"
+    export *
+  }
+    
+  explicit module pystrcmp {
+    header "/usr/include/python3.10/pystrcmp.h"
+    export *
+  }
+    
+  explicit module pystrhex {
+    header "/usr/include/python3.10/pystrhex.h"
+    export *
+  }
+    
+  explicit module pystrtod {
+    header "/usr/include/python3.10/pystrtod.h"
+    export *
+  }
+    
+  explicit module Python {
+    header "/usr/include/python3.10/Python.h"
+    export *
+  }
+    
+  explicit module pythonrun {
+    header "/usr/include/python3.10/pythonrun.h"
+    export *
+  }
+    
+  explicit module pythread {
+    header "/usr/include/python3.10/pythread.h"
+    export *
+  }
+    
+  explicit module rangeobject {
+    header "/usr/include/python3.10/rangeobject.h"
+    export *
+  }
+    
+  explicit module setobject {
+    header "/usr/include/python3.10/setobject.h"
+    export *
+  }
+    
+  explicit module sliceobject {
+    header "/usr/include/python3.10/sliceobject.h"
+    export *
+  }
+    
+  explicit module structmember {
+    header "/usr/include/python3.10/structmember.h"
+    export *
+  }
+    
+  explicit module structseq {
+    header "/usr/include/python3.10/structseq.h"
+    export *
+  }
+    
+  explicit module sysmodule {
+    header "/usr/include/python3.10/sysmodule.h"
+    export *
+  }
+    
+  explicit module token {
+    header "/usr/include/python3.10/token.h"
+    export *
+  }
+    
+  explicit module traceback {
+    header "/usr/include/python3.10/traceback.h"
+    export *
+  }
+    
+  explicit module tracemalloc {
+    header "/usr/include/python3.10/tracemalloc.h"
+    export *
+  }
+    
+  explicit module tupleobject {
+    header "/usr/include/python3.10/tupleobject.h"
+    export *
+  }
+    
+  explicit module typeslots {
+    header "/usr/include/python3.10/typeslots.h"
+    export *
+  }
+    
+  explicit module unicodeobject {
+    header "/usr/include/python3.10/unicodeobject.h"
+    export *
+  }
+    
+  explicit module warnings {
+    header "/usr/include/python3.10/warnings.h"
+    export *
+  }
+    
+  explicit module weakrefobject {
+    header "/usr/include/python3.10/weakrefobject.h"
+    export *
+  }
+    
+  explicit module ncurses {
+    header "/usr/include/ncurses.h" // note: same as curses.h
+    export *
+
+    explicit module dll {
+      header "/usr/include/ncurses_dll.h"
+      export *
+    }
+
+    explicit module unctrl {
+      header "/usr/include/unctrl.h"
+      export *
+    }
+  }
+}
