@@ -211,20 +211,22 @@ final class FilamentChanger {
     }
 }
 
-@discardableResult
-@_transparent
-func withRetry<R>(count: UInt, body: () throws -> (R)) throws -> R {
+func withRetry(count: UInt, body: () throws -> ()) throws {
     // guarantee that numberOfIterations is > 0 on loop start, but less or equal to UInt.max
     let numberOfIterations = min(count, UInt.max - 1) + 1
     var rethrownError: (any Swift.Error)? = nil
     for _ in 0..<numberOfIterations {
         do {
-            return try body()
+            try body()
+            rethrownError = nil
+            break
         } catch {
             rethrownError = error
             continue
         }
     }
 
-    throw rethrownError!
+    if let rethrownError {
+        throw rethrownError
+    }
 }
