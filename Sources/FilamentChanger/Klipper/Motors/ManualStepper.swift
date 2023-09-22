@@ -9,6 +9,7 @@ import PythonKit
 
 extension Klipper {
     struct ManualStepper: KlipperObject {
+        // ManualStepper
         var object: PythonObject
         let throwing: ThrowingPythonObject
         let checking: CheckingPythonObject
@@ -22,6 +23,8 @@ extension Klipper {
             do_set_position = object.do_set_position
             do_move = object.do_move
             do_homing_move = object.do_homing_move
+
+            stepper = Stepper(object.steppers[0])
         }
 
         private let get_position: PythonObject
@@ -29,6 +32,8 @@ extension Klipper {
         private let do_set_position: PythonObject
         private let do_move: PythonObject
         private let do_homing_move: PythonObject
+
+        let stepper: Stepper
 
         var position: Float {
             // klipper API is quite bad

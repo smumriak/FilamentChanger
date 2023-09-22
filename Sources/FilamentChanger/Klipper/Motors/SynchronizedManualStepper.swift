@@ -33,6 +33,10 @@ extension Klipper {
         private let sync_to_extruder: PythonObject
         private let reset_synchronization: PythonObject
 
+        var stepper: Stepper {
+            manualStepper.stepper
+        }
+
         var position: Float {
             get {
                 manualStepper.position
