@@ -187,21 +187,27 @@ extension FilamentChanger {
 
         feeder.resetSynchronization()
 
+        let stepLength = selector.stepper.stepLength
+
         for _ in 0..<15 {
             changeServoPosition(to: .up)
             feeder.position = 0.0
-            feeder.homingMove(to: 10.0, speed: 60.0, acceleration: feederAcceleration)
-            toolhead.dwell(for: .milliseconds(200))
 
-            var distanceMoved = abs(selector.position)
+            var distanceMoved = selector.stepper.withCountedSteps {
+                feeder.homingMove(to: 10.0, speed: 60.0, acceleration: feederAcceleration)
+                toolhead.dwell(for: .milliseconds(200))
+            }
 
             feeder.position = 0.0
             feeder.homingMove(to: -10.0, speed: 60.0, acceleration: feederAcceleration)
             toolhead.dwell(for: .milliseconds(200))
 
-            distanceMoved += abs(selector.position)
+            distanceMoved += selector.stepper.withCountedSteps {
+                feeder.homingMove(to: 10.0, speed: 60.0, acceleration: feederAcceleration)
+                toolhead.dwell(for: .milliseconds(200))
+            }
 
-            if distanceMoved < 10.0 {
+            if Float(distanceMoved) * stepLength < 10.0 {
                 withServoDown {
                     feeder.move(to: -3.0, speed: 20.0, acceleration: feederAcceleration)
                     toolhead.waitForMovesToFinish()
