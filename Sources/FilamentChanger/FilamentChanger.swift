@@ -25,6 +25,18 @@ func passErrorToPython(_ error: some Error) {
     }
 }
 
+@_disfavoredOverload
+@_transparent
+func pyThrow(_ body: () throws -> ()) {
+    do {
+        try body()
+    } catch {
+        passErrorToPython(error)
+    }
+}
+
+@_disfavoredOverload
+@_transparent
 func pyThrow<R>(_ body: () throws -> (R)) -> R? {
     do {
         return try body()
