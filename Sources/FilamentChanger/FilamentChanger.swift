@@ -36,8 +36,8 @@ func pyThrow<R>(_ body: () throws -> (R)) -> R? {
 
 @_cdecl("createFilamentChanger")
 func createFilamentChanger(_ configObject: UnsafeMutablePointer<PyObject>) -> UnsafeMutableRawPointer? {
-    let config = Klipper.Config(PythonObject(configObject))
     return pyThrow {
+        let config = try Klipper.Config(PythonObject(configObject))
         let filamentChanger = try FilamentChanger(config)
         return Unmanaged.passRetained(filamentChanger).toOpaque()
     }

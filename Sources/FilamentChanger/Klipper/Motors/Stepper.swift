@@ -14,7 +14,7 @@ extension Klipper {
         let throwing: ThrowingPythonObject
         let checking: CheckingPythonObject
 
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object

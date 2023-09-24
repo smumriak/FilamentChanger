@@ -15,10 +15,12 @@ extension Klipper {
         let throwing: ThrowingPythonObject
         let checking: CheckingPythonObject
 
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object
+
+            get_last_move_time = object.get_last_move_time
             get_position = object.get_position
             set_position = object.set_position
             do_set_position = object.do_set_position
@@ -27,6 +29,7 @@ extension Klipper {
             manual_move = object.manual_move
         }
 
+        private let get_last_move_time: PythonObject
         private let get_position: PythonObject
         private let set_position: PythonObject
         private let do_set_position: PythonObject
@@ -56,6 +59,10 @@ extension Klipper {
 
         func waitForMovesToFinish() {
             wait_moves()
+        }
+
+        var lastMoveTime: Float {
+            Float(get_last_move_time())!
         }
 
         func manualMove(to position: Position, speed: Float) {

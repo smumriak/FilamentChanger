@@ -12,5 +12,5 @@ protocol KlipperObject {
     var throwing: ThrowingPythonObject { get }
     var checking: CheckingPythonObject { get }
 
-    init(_ object: PythonObject)
+    init(_ object: PythonObject) throws
 }

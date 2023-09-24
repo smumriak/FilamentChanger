@@ -22,8 +22,8 @@ struct Context {
 
     init(_ config: Klipper.Config) throws {
         printer = config.printer
-        gCode = .init(config.checking.gCode!)
-        reactor = .init(config.checking.reactor!)
+        gCode = try .init(config.checking.gCode!)
+        reactor = try .init(config.checking.reactor!)
         self.config = config
         servo = try printer.lookupObject(named: "ercf_servo ercf_servo")
         encoder = try printer.lookupObject(named: "ercf_encoder ercf_encoder")

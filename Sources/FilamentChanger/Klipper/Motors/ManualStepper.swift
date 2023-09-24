@@ -14,7 +14,7 @@ extension Klipper {
         let throwing: ThrowingPythonObject
         let checking: CheckingPythonObject
 
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object
@@ -24,7 +24,7 @@ extension Klipper {
             do_move = object.do_move
             do_homing_move = object.do_homing_move
 
-            stepper = Stepper(object.steppers[0])
+            stepper = try Stepper(object.steppers[0])
         }
 
         private let get_position: PythonObject

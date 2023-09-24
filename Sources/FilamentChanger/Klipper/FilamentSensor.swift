@@ -14,12 +14,12 @@ extension Klipper {
         let checking: CheckingPythonObject
         let runoutHelper: RunoutHelper
 
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object
 
-            runoutHelper = RunoutHelper(object.runout_helper)
+            runoutHelper = try RunoutHelper(object.runout_helper)
         }
 
         @_transparent
@@ -78,7 +78,7 @@ extension Klipper {
         let throwing: ThrowingPythonObject
         let checking: CheckingPythonObject
 
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object

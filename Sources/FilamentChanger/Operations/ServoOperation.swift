@@ -15,6 +15,8 @@ struct ServoOperation: Operation {
 
 extension FilamentChanger {
     func changeServoPosition(to position: Klipper.Servo.Position) {
+        let servo = context.servo
+        
         if currentState.servoPosition == position {
             return
         }
@@ -28,12 +30,15 @@ extension FilamentChanger {
                 angle = settings.servoAngles.down
         }
         
-        context.servo.changeAngle(to: angle)
+        servo.changeAngle(to: angle)
 
-        if position == .unknown {
-            currentState.servoPosition = .up
-        } else {
-            currentState.servoPosition = position
+        switch position {
+            case .unknown, .up:
+                currentState.servoPosition = .up
+                servo.disable()
+
+            case .down:
+                currentState.servoPosition = .down
         }
     }
 

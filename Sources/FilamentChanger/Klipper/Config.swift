@@ -15,12 +15,12 @@ extension Klipper {
 
         let printer: Printer
         
-        init(_ object: PythonObject) {
+        init(_ object: PythonObject) throws {
             throwing = object.throwing
             checking = object.checking
             self.object = object
 
-            printer = Printer(object.get_printer())
+            printer = try Printer(object.get_printer())
 
             print("Hi")
 

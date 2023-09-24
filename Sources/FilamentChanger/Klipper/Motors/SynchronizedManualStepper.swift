@@ -23,8 +23,8 @@ extension Klipper {
         var throwing: ThrowingPythonObject { manualStepper.throwing }
         var checking: CheckingPythonObject { manualStepper.checking }
 
-        init(_ object: PythonObject) {
-            self.manualStepper = ManualStepper(object)
+        init(_ object: PythonObject) throws {
+            self.manualStepper = try ManualStepper(object)
 
             sync_to_extruder = object.sync_to_extruder
             reset_synchronization = object.reset_synchronization
